@@ -22,7 +22,7 @@ sun = full_body[0]
 mon = full_body[1]
 tue = full_body[2]
 wed = full_body[3]
-thu	= full_body[4]
+thu = full_body[4]
 fri = full_body[5]
 sat = full_body[6]
 
