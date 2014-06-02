@@ -7,7 +7,7 @@ require 'nokogiri'
 #Let's scrape the price of my favorite car company.
 class Tesla
 
-attr_reader :bendable_html, :unbendable_html, :tesla_span
+attr_reader :bendable_html, :unbendable_html, :price_span, :close_span
 
 	def initialize
 		grab_html
@@ -31,22 +31,23 @@ attr_reader :bendable_html, :unbendable_html, :tesla_span
 	#I will tell @bendable_html that I don't want the entire
 	#page. Just a special little part. Just the Tesla span.
 	def grab_span
-		@tesla_span = @bendable_html.xpath("//span[@id='yfs_l84_tsla']").first
+		@price_span = @bendable_html.xpath("//span[@id='yfs_l84_tsla']").first
+		
+		#I had trouble with this. Why is this nodeset empty? 
+		@close_span = @bendable_html.xpath("//td[@class='yfnc_tabledata1' and @id='yui_3_9_1_8_1401651994677_53']").empty?
+		puts @close_span
 	end
 
 	#Now I have the span of HTML that contains my Tesla ticker.
 	#I don't want all the HTML. I just want the ticker price. 
 	#I'll use my content() pliers to pull it out. 
 	def grab_price
-		tesla_price = "$" + @tesla_span.content
+		current_price = "$" + @price_span.content
+		#close_price = "$" + @close_span
 		puts "The greatest car company in the world has a stock price of "
-		puts tesla_price
-		
-		if tesla_price.to_i < 400
-			puts "What a deal!"
-		else 
-			puts "Save up and support Elon."
-		end
+		puts current_price
+		#puts "Yesterday the stock closed at #{close_price}."
+
 	end
 
 end
@@ -89,12 +90,13 @@ class StockPrice
 	#Use Xpath to extract just the nice parts.	
 	def get_span
 		@stock_span = @soft_html.xpath("//span[@id='yfs_l84_#{@lil_symbol}']").first
+		#@prev_close = @soft_html.xpath("//span[@id='yfs_l84_#{@lil_symbol}']").first
 	end
-		
+
 
 	def price
 		stock_price = @stock_span.content
-		puts "That company is valued at $#{stock_price}."
+		puts "That stock is valued at $#{stock_price}."
 	end
 		
 end
